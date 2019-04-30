@@ -11,6 +11,7 @@ import android.graphics.Paint
 import android.graphics.Color
 import android.content.Context
 import android.app.Activity
+import android.util.Log
 
 val nodes : Int = 5
 val lines : Int = 2
@@ -22,11 +23,12 @@ val foreColor : Int = Color.parseColor("#673AB7")
 val backColor : Int = Color.parseColor("#BDBDBD")
 val hFactor : Float = 3f
 val angleDeg : Float = 90f
+val delay : Long = 20
 
 fun Int.inverse() : Float = 1f / this
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
-fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), divideScale(i, n)) * n
+fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 fun Float.mirrorValue(a : Int, b : Int) : Float {
     val k : Float = scaleFactor()
     return (1 - k) * a.inverse() + k * b.inverse()
@@ -55,8 +57,10 @@ fun Canvas.drawRBSONode(i : Int, scale : Float, paint : Paint) {
     translate(w / 2, gap * (i + 1))
     rotate(angleDeg * sc2)
     for (j in 0..(lines - 1)) {
+        val hSize : Float = size / hFactor
         save()
         drawSideOpenLine(size * (1f - 2 * j), sc1.divideScale(j, lines), paint)
+        drawLine(-size, -hSize * (1f - 2 * j), size, -hSize * (1f - 2 * j), paint)
         restore()
     }
     restore()
@@ -84,6 +88,7 @@ class RectBoxSideOpenView(ctx : Context) : View(ctx) {
 
         fun update(cb : (Float) -> Unit) {
             scale += scale.updateValue(dir, lines, 1)
+            Log.d("scale:", "$scale")
             if (Math.abs(scale - prevScale) > 1) {
                 scale = prevScale + dir
                 dir = 0f
@@ -106,7 +111,7 @@ class RectBoxSideOpenView(ctx : Context) : View(ctx) {
             if (animated) {
                 cb()
                 try {
-                    Thread.sleep(50)
+                    Thread.sleep(delay)
                     view.invalidate()
                 } catch(ex : Exception) {
 
@@ -116,7 +121,7 @@ class RectBoxSideOpenView(ctx : Context) : View(ctx) {
 
         fun start() {
             if (!animated) {
-                animated = false
+                animated = true
                 view.postInvalidate()
             }
         }
