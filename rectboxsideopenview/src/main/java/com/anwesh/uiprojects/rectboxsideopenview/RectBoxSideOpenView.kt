@@ -194,4 +194,26 @@ class RectBoxSideOpenView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : RectBoxSideOpenView) {
+
+        private val rbso : RectBoxSideOpen = RectBoxSideOpen(0)
+        private var animator : Animator = Animator(view)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            rbso.draw(canvas, paint)
+            animator.animate {
+                rbso.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            rbso.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
