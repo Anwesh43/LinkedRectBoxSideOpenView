@@ -217,4 +217,13 @@ class RectBoxSideOpenView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : RectBoxSideOpenView {
+            val view : RectBoxSideOpenView = RectBoxSideOpenView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
