@@ -50,7 +50,7 @@ fun Canvas.drawRBSONode(i : Int, scale : Float, paint : Paint) {
     val size : Float = gap / sizeFactor
     paint.color = foreColor
     paint.strokeWidth = Math.min(w, h) / strokeFactor
-    paint.strokeCap = Paint.Cap.ROUND 
+    paint.strokeCap = Paint.Cap.ROUND
     save()
     translate(w / 2, gap * (i + 1))
     rotate(angleDeg * sc2)
@@ -60,4 +60,22 @@ fun Canvas.drawRBSONode(i : Int, scale : Float, paint : Paint) {
         restore()
     }
     restore()
+}
+
+class RectBoxSideOpenView(ctx : Context) : View(ctx) {
+
+    private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    override fun onDraw(canvas : Canvas) {
+
+    }
+
+    override fun onTouchEvent(event : MotionEvent) : Boolean {
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> {
+
+            }
+        }
+        return true
+    }
 }
